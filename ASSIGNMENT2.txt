@@ -1,0 +1,472 @@
+              ASSIGNMENT 2
+
+>
+CREATE TABLE Client_master_33(
+	Client_no Varchar2(6) PRIMARY KEY,
+	Name Varchar2(20) NOT NULL,
+	City Varchar(15),
+	Pincode NUMBER(8),
+	State Varchar2(15),
+	Bal_due Number(10,2),
+	CHECK (Client_no LIKE 'C%'));
+
+
+>
+INSERT INTO Client_master_33 
+VALUES 
+('C00001','Ivan Bayross','Mumbai',400054,'Maharashtra',15000),
+('C00002','Mamta Mazumdar','Madras',780001,'Tamil Nadu',0),
+('C00003','Chhaya Bankar','Mumbai',400057,'Maharashtra',5000),
+('C00004','Ashwini Joshi','Bangalore',560001,'Karnataka',0),
+('C00005','Hansel Colaco','Mumbai',400060,'Maharashtra',2000),
+('C00006','Deepak Sharma','Mangalore',560050,'Karnataka',0);
+
+> SELECT * FROM Client_master_33;
+
+CLIENT NAME                 CITY               PINCODE STATE              BAL_DUE
+------ -------------------- --------------- ---------- --------------- ----------
+C00001 Ivan Bayross         Mumbai              400054 Maharashtra          15000
+C00002 Mamta Mazumdar       Madras              780001 Tamil Nadu               0
+C00003 Chhaya Bankar        Mumbai              400057 Maharashtra           5000
+C00004 Ashwini Joshi        Bangalore           560001 Karnataka                0
+C00005 Hansel Colaco        Mumbai              400060 Maharashtra           2000
+C00006 Deepak Sharma        Mangalore           560050 Karnataka                0
+
+6 rows selected.
+
+
+
+
+
+
+
+>CREATE TABLE product_master_33(
+	Product_no Varchar2(6) PRIMARY KEY,
+	Description Varchar2(15) NOT NULL,
+	Profit_percent Number(4,2) NOT NULL,
+	Unit_measure Varchar2(10) NOT NULL,
+	Qty_on_hand Number(8) NOT NULL,
+	Record_lvl Number(8) NOT NULL,
+	Sell_price Number(8,2) NOT NULL,
+	Cost_price Number(8,2) NOT NULL,
+	CHECK(Product_no LIKE 'P%'),
+	CHECK(Sell_price<>0 AND Cost_price<>0));
+
+
+
+
+>
+INSERT INTO product_master_33 
+VALUES
+('P00001','T-Shirts',5,'Piece',200,50,350,250),
+('P0345','Shirts',6,'Piece',150,50,500,350),
+('P06734','Cotton Jeans',5,'Piece',100,20,600,450),
+('P07865','Jeans',5,'Piece',100,20,750,500),
+('P07868','Trousers',2,'Piece',150,50,850,550),
+('P07885','PuM-Overs',2.5,'Piece',80,30,700,450),
+('P07965','Denim Shirts',4,'Piece',100,40,350,250),
+('P07975','Lyers Tops',5,'Piece',70,30,300,175),
+('P08865','Skirts',5,'Piece',75,30,450,300);
+
+
+
+>SELECT * FROM product_master_33;
+
+PRODUC DESCRIPTION     PROFIT_PERCENT UNIT_MEASU QTY_ON_HAND RECORD_LVL SELL_PRICE COST_PRICE
+------ --------------- -------------- ---------- ----------- ---------- ---------- ----------
+P00001 T-Shirts                     5 Piece              200         50        350        250
+P0345  Shirts                       6 Piece              150         50        500        350
+P06734 Cotton Jeans                 5 Piece              100         20        600        450
+P07865 Jeans                        5 Piece              100         20        750        500
+P07868 Trousers                     2 Piece              150         50        850        550
+P07885 PuM-Overs                  2.5 Piece               80         30        700        450
+P07965 Denim Shirts                 4 Piece              100         40        350        250
+P07975 Lyers Tops                   5 Piece               70         30        300        175
+P08865 Skirts                       5 Piece               75         30        450        300
+
+
+
+
+
+
+
+
+>INSERT INTO product_master_33 VALUES('f0345','Shirts',6,'Piece',150,50,500,350);
+
+
+INSERT INTO product_master_33 VALUES('f0345','Shirts',6,'Piece',150,50,500,350)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.SYS_C008482) violated
+Help: https://docs.oracle.com/error-help/db/ora-02290/
+
+
+
+> INSERT INTO product_master_33 VALUES('&Product_no','&Description',&Profit_percent,'&Unit_measure',&Qty_on_hand,&Reorder_lvl,&Sell_price,&Cost_price);
+
+
+Enter value for product_no: f00001
+Enter value for description: t
+Enter value for profit_percent: 5
+Enter value for unit_measure: p
+Enter value for qty_on_hand: 2
+Enter value for reorder_lvl: 5
+Enter value for sell_price: 350
+Enter value for cost_price: 250
+old   1: INSERT INTO product_master_33 VALUES('&Product_no','&Description',&Profit_percent,'&Unit_measure',&Qty_on_hand,&Reorder_lvl,&Sell_price,&Cost_price)
+new   1: INSERT INTO product_master_33 VALUES('f00001','t',5,'p',2,5,350,250)
+INSERT INTO product_master_33 VALUES('f00001','t',5,'p',2,5,350,250)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.SYS_C008482) violated
+Help: https://docs.oracle.com/error-help/db/ora-02290/
+
+
+
+>CREATE TABLE salesman_master_33(
+	Salesman_no Varchar2(6) PRIMARY KEY,
+	Salesman_name Varchar2(20) NOT NULL,
+	Address1 Varchar2(10) NOT NULL,
+	Address2 Varchar2(10),
+	City Varchar2(20),
+	Pincode Number(7),
+	State Varchar2(20),
+	Sal_amt Number(8,2) NOT NULL,
+	Ygt_to_get Number(6,2) NOT NULL,
+	Ytd_sales Number(6,2) NOT NULL,
+	Remarks Varchar2(20),
+	CHECK(Salesman_no LIKE 'S%'),
+	CHECK(Sal_amt<>0 AND Ygt_to_get<>0));
+
+
+
+>
+INSERT INTO salesman_master_33
+VALUES 
+('S00001', 'Aman', 'A/14', 'Worli', 'Mumbai', 400002, 'Maharashtra', 3000, 100, 50, 'Good'),
+('S00002', 'Omkar', '65', 'Nariman', 'Mumbai', 400001, 'Maharashtra', 3000, 200, 100, 'Good'),
+('S00003', 'Raj', 'P-7', 'Bandra', 'Mumbai', 400032, 'Maharashtra', 3000, 200, 100, 'Good'),
+('S00004', 'Ashish', 'A/5', 'Juhu', 'Mumbai', 400044, 'Maharashtra', 3500, 200, 150, 'Good');
+
+> SET LINE 200;
+> SELECT * FROM SALESMAN_MASTER_33;
+
+SALESM SALESMAN_NAME        ADDRESS1   ADDRESS2   CITY                    PINCODE STATE                   SAL_AMT YGT_TO_GET  YTD_SALES REMARKS
+------ -------------------- ---------- ---------- -------------------- ---------- -------------------- ---------- ---------- ---------- --------------------
+S00001 Aman                 A/14       Worli      Mumbai                   400002 Maharashtra                3000        100         50 Good
+S00002 Omkar                65         Nariman    Mumbai                   400001 Maharashtra                3000        200        100 Good
+S00003 Raj                  P-7        Bandra     Mumbai                   400032 Maharashtra                3000        200        100 Good
+S00004 Ashish               A/5        Juhu       Mumbai                   400044 Maharashtra                3500        200        150 Good
+
+
+
+
+
+
+
+
+
+
+> 
+CREATE TABLE sales_order_33(
+	Order_no Varchar2(6) PRIMARY KEY,
+	Order_date date,
+	Client_no Varchar2(6),
+	Salesman_no Varchar2(25),
+	Dely_type Char(1) DEFAULT 'F',
+	Billed_yn Char(1),
+	Dely_date date,
+	Order_status Varchar2(10),
+	FOREIGN KEY(Client_no) references Client_master_33(Client_no),
+	FOREIGN KEY(Salesman_no) references salesman_master_33(Salesman_no),
+	CHECK(Order_no LIKE 'O%'),
+	CHECK(Dely_type IN ('P','F')),
+	CHECK(Dely_date>Order_date),
+	CHECK(Order_status IN ('in process','fulfilled','backorder','cancelled')));
+
+
+>
+INSERT INTO sales_order_33 (Order_no, Order_date, Client_no, Salesman_no, Billed_yn, Dely_date, Order_status)
+VALUES 
+('O19001','20-JUL-02','C00001', 'S00001','N','12-JUN-04', 'in process');
+
+>
+INSERT INTO sales_order_33
+VALUES 
+('O19002', '27-JUN-02', 'C00002', 'S00002', 'P', 'N', '25-JUN-04', 'cancelled'),
+('O46865', '20-FEB-02', 'C00003', 'S00003', 'F', 'Y', '18-FEB-04', 'fulfilled'),
+('O19003', '07-APR-02', 'C00001', 'S00001', 'F', 'Y', '03-APR-04', 'fulfilled'),
+('O46866', '22-MAY-02', 'C00004', 'S00002', 'P', 'N', '20-MAY-04', 'cancelled'),
+('O19008', '26-JUL-02', 'C00005', 'S00004', 'F', 'N', '24-MAY-04', 'in process');
+
+> SELECT * FROM sales_order_33;
+
+ORDER_ ORDER_DAT CLIENT SALESMAN_NO               D B DELY_DATE ORDER_STAT
+------ --------- ------ ------------------------- - - --------- ----------
+O19001 20-JUL-02 C00001 S00001                    F N 12-JUN-04 in process
+O19002 27-JUN-02 C00002 S00002                    P N 25-JUN-04 cancelled
+O46865 20-FEB-02 C00003 S00003                    F Y 18-FEB-04 fulfilled
+O19003 07-APR-02 C00001 S00001                    F Y 03-APR-04 fulfilled
+O46866 22-MAY-02 C00004 S00002                    P N 20-MAY-04 cancelled
+O19008 26-JUL-02 C00005 S00004                    F N 24-MAY-04 in process
+
+6 rows selected.
+
+
+
+
+
+
+
+
+
+
+>CREATE TABLE sales_order_details_33(
+	Order_no Varchar2(6),
+	Product_no Varchar2(6),
+	Qty_ordered Number(8),
+	Qty_Disp Number(8),
+	Product_rate Number(10,2),
+	PRIMARY KEY(Order_no,Product_no),
+	FOREIGN KEY(Order_no) REFERENCES sales_order_33(Order_no),
+	FOREIGN KEY(Product_no) REFERENCES product_master_33(Product_no));
+
+>
+INSERT INTO sales_order_details_33
+VALUES 
+('O19001', 'P00001', 4, 4, 525),
+('O19001', 'P07965', 2, 1, 8400),
+('O19001', 'P07885', 2, 1, 5250),
+('O19002', 'P00001', 10,0, 525),
+('O46865', 'P07868', 3, 3, 3150),
+('O46865', 'P07885', 3, 1, 5250),
+('O46865', 'P00001', 10, 10, 525),
+('O46865', 'P0345', 4, 4, 1050),
+('O19003', 'P0345', 2, 2, 1050),
+('O19003', 'P06734', 1, 1, 12000),
+('O46866', 'P07965', 1, 0, 8400),
+('O46866', 'P07975', 1, 0, 1050),
+('O19008', 'P00001', 10, 5, 525),
+('O19008', 'P07975', 5, 3, 1050);
+
+14 rows created.
+
+
+
+>
+INSERT INTO sales_order_details_33
+VALUES 	('O19003', 'P0345', 2, 2, 1050); 
+
+
+INSERT INTO sales_order_details_33
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008543) violated on table SYSTEM.SALES_ORDER_DETAILS_33 columns (ORDER_NO, PRODUCT_NO)
+ORA-03301: (ORA-00001 details) row with column values (ORDER_NO:'O19003', PRODUCT_NO:'P0345') already exists
+Help: https://docs.oracle.com/error-help/db/ora-00001/
+
+
+
+3.
+(a)
+SELECT Name
+FROM Client_master_33
+WHERE Name LIKE '_a%';
+
+NAME
+--------------------
+Mamta Mazumdar
+Hansel Colaco
+
+
+(b)
+SELECT *
+FROM Client_master_33
+WHERE City LIKE '_a%';
+
+CLIENT NAME                 CITY               PINCODE STATE              BAL_DUE
+------ -------------------- --------------- ---------- --------------- ----------
+C00002 Mamta Mazumdar       Madras              780001 Tamil Nadu               0
+C00004 Ashwini Joshi        Bangalore           560001 Karnataka                0
+C00006 Deepak Sharma        Mangalore           560050 Karnataka                0
+
+(c)
+SELECT *
+FROM Client_master_33
+WHERE City IN ('Bombay','Delhi');
+
+no rows selected.
+
+
+SELECT *
+FROM Client_master_33
+WHERE City IN ('Bombay','Delhi','Mumbai');
+
+CLIENT NAME                 CITY               PINCODE STATE              BAL_DUE
+------ -------------------- --------------- ---------- --------------- ----------
+C00001 Ivan Bayross         Mumbai              400054 Maharashtra          15000
+C00003 Chhaya Bankar        Mumbai              400057 Maharashtra           5000
+C00005 Hansel Colaco        Mumbai              400060 Maharashtra           2000
+
+(d)
+SELECT *
+FROM Client_master_33
+WHERE Bal_due>10000;
+
+CLIENT NAME                 CITY               PINCODE STATE              BAL_DUE
+------ -------------------- --------------- ---------- --------------- ----------
+C00001 Ivan Bayross         Mumbai              400054 Maharashtra          15000
+
+(e)
+SELECT *
+FROM sales_order_33
+WHERE Order_date LIKE '%JAN%';
+
+no rows selected
+
+SELECT *
+FROM sales_order_33
+WHERE Order_date LIKE '%FEB%';
+
+ORDER_ ORDER_DAT CLIENT SALESMAN_NO               D B DELY_DATE ORDER_STAT
+------ --------- ------ ------------------------- - - --------- ----------
+O46865 20-FEB-02 C00003 S00003                    F Y 18-FEB-04 fulfilled
+
+(f)
+SELECT S.*,T.Product_no,T.Qty_ordered,T.Qty_Disp,T.Product_rate
+FROM sales_order_33 S,sales_order_details_33 T
+WHERE S.Order_no=T.Order_no AND Client_no IN ('C00001','C00002');
+
+
+ORDER_ ORDER_DAT CLIENT SALESMAN_NO               D B DELY_DATE ORDER_STAT PRODUC QTY_ORDERED   QTY_DISP PRODUCT_RATE
+------ --------- ------ ------------------------- - - --------- ---------- ------ ----------- ---------- ------------
+O19001 20-JUL-02 C00001 S00001                    F N 12-JUN-04 in process P00001           4          4          525
+O19001 20-JUL-02 C00001 S00001                    F N 12-JUN-04 in process P07965           2          1         8400
+O19001 20-JUL-02 C00001 S00001                    F N 12-JUN-04 in process P07885           2          1         5250
+O19002 27-JUN-02 C00002 S00002                    P N 25-JUN-04 cancelled  P00001          10          0          525
+O19003 07-APR-02 C00001 S00001                    F Y 03-APR-04 fulfilled  P0345            2          2         1050
+O19003 07-APR-02 C00001 S00001                    F Y 03-APR-04 fulfilled  P06734           1          1        12000
+
+6 rows selected.
+
+(g)
+SELECT T.Product_no,T.Description,S.Product_rate
+FROM sales_order_details_33 S,product_master_33 T
+WHERE S.Product_no=T.Product_no AND S.Product_rate between 2001 and 5000;
+
+PRODUC DESCRIPTION     PRODUCT_RATE
+------ --------------- ------------
+P07868 Trousers                3150
+
+(h)*
+SELECT T.Product_no,T.Description,S.Product_rate
+FROM sales_order_details_33 S,product_master_33 T
+WHERE S.Product_no=T.Product_no AND S.Product_rate>1500;
+
+PRODUC DESCRIPTION     PRODUCT_RATE
+------ --------------- ------------
+P06734 Cotton Jeans           12000
+P07868 Trousers                3150
+P07885 PuM-Overs               5250
+P07885 PuM-Overs               5250
+P07965 Denim Shirts            8400
+P07965 Denim Shirts            8400
+
+6 rows selected.
+
+....(incomplete)
+
+
+(i)
+SELECT Name,City,State
+FROM Client_master_33
+WHERE State<>'Maharashtra';
+
+NAME                 CITY            STATE
+-------------------- --------------- ---------------
+Mamta Mazumdar       Madras          Tamil Nadu
+Ashwini Joshi        Bangalore       Karnataka
+Deepak Sharma        Mangalore       Karnataka
+
+(j)
+SELECT COUNT(Order_no) total_order
+FROM sales_order_33;
+
+TOTAL_ORDER
+-----------
+          6
+
+(k)
+SELECT AVG(Sell_price) average_price
+FROM product_master_33;
+
+AVERAGE_PRICE
+-------------
+   538.888889
+
+(l)
+SELECT MAX(Sell_price) max_price,MIN(Sell_price) min_price
+FROM product_master_33;
+
+ MAX_PRICE  MIN_PRICE
+---------- ----------
+       850        300
+
+(m)
+SELECT COUNT(DISTINCT Product_no) count_product
+FROM sales_order_details_33
+WHERE Product_rate>=1500;
+
+COUNT_PRODUCT
+-------------
+            4
+
+(n)
+SELECT Product_no,Description,Qty_on_hand,Record_lvl
+FROM product_master_33
+WHERE Qty_on_hand<Record_lvl;
+
+no rows selected.
+
+INSERT INTO product_master_33 VALUES
+('P08643','Suit',5,'Piece',12,40,670,580),
+('P08729','Underwear',3,'Piece',50,30,290,180),
+('P01245','Upperwear',15,'Piece',18,35,245,130);
+
+3 rows inserted.
+
+SELECT Product_no,Description,Qty_on_hand,Record_lvl
+FROM product_master_33
+WHERE Qty_on_hand<Record_lvl;
+
+PRODUC DESCRIPTION     QTY_ON_HAND RECORD_LVL
+------ --------------- ----------- ----------
+P08643 Suit                     12         40
+P01245 Upperwear                18         35
+
+(o)
+SELECT Order_no,Order_date
+from sales_order_33;
+
+ORDER_ ORDER_DAT
+------ ---------
+O19001 20-JUL-02
+O19002 27-JUN-02
+O46865 20-FEB-02
+O19003 07-APR-02
+O46866 22-MAY-02
+O19008 26-JUL-02
+
+6 rows selected.
+ 
+
+
+
+
+
+
+
+
+
+
+
