@@ -1,0 +1,272 @@
+1.A) SQL> select sysdate from dual;
+
+SYSDATE
+---------
+12-MAR-25
+
+
+SQL>  SELECT SYSTIMESTAMP FROM DUAL;
+
+SYSTIMESTAMP
+---------------------------------------------------------------------------
+12-MAR-25 09.59.18.048000 AM +05:30
+
+
+B)
+SQL> SELECT 2*2 "mul(2*2)" FROM DUAL;
+
+  mul(2*2)
+----------
+         4
+
+C)
+SQL>  SELECT ABS(-15) FROM DUAL;
+
+  ABS(-15)
+----------
+        15
+
+D)
+SQL>  SELECT SQRT(5) FROM DUAL;
+
+   SQRT(5)
+----------
+2.23606798
+
+
+E)
+SQL> SELECT ROUND(15.19,1) FROM DUAL;
+
+ROUND(15.19,1)
+--------------
+          15.2
+
+F)
+SQL> SELECT LOWER('IVAN BAYROSS') AS lower_var from DUAL;
+
+LOWER_VAR
+------------
+ivan bayross
+
+G)
+SQL> SELECT UPPER('IVAN BAYROSS') AS UPPER_VAR from DUAL;
+
+UPPER_VAR
+------------
+IVAN BAYROSS
+
+H)
+SQL> SELECT ADD_MONTHS (SYSDATE,5) AS NEW_DATE FROM DUAL;
+
+NEW_DATE
+---------
+12-AUG-25
+
+I)
+SQL>  SELECT MONTHS_BETWEEN('02-jul-2001','02-jan-2001') AS NO_OF_MONTHS FROM DUAL;
+
+NO_OF_MONTHS
+------------
+           6
+
+J)
+SQL> SELECT TO_CHAR(SYSDATE,'DD/MM/YYYY') FROM DUAL;
+
+TO_CHAR(SY
+----------
+12/03/2025
+
+
+
+
+
+
+
+2.
+
+CREATE TABLE emp_33 (
+    EMPNO     NUMBER(6)    NOT NULL,
+    ENAME     VARCHAR2(10),
+    JOB       VARCHAR2(10),
+    MGR       NUMBER(6),
+    HIREDATE  DATE,
+    SAL       NUMBER(6),
+    COMM      NUMBER(6),
+    DEPTNO    NUMBER(2)
+);
+
+
+INSERT INTO emp_33 
+VALUES 
+(7369, 'Smith', 'Clerk', 7902, '17-DEC-80', 800, NULL, 20);
+ (7499, 'Allen', 'Salesman', 7698, '20-FEB-81', 1600, 300, 30);
+(7521, 'Ward', 'Salesman', 7698,'22-FEB-81', 1250, 500, 30);
+ (7566, 'Jones', 'Manager', 7839, '02-APR-81', 2975, NULL, 20);
+ (7654, 'Martin', 'Salesman', 7698, '28-SEP-81', 1250, 1400, 30);
+ (7698, 'Blake', 'Manager', 7839, '01-MAY-81', 2850, NULL, 30);
+(7782, 'Clark', 'Manager', 7839, '09-JUN-81', 2450, NULL, 10);
+ (7839, 'King', 'President', NULL,'17-NOV-81',5000, NULL, 10);
+ (7844, 'Turner', 'Salesman', 7698,'08-SEP-81', 1500, 0, 30);
+ (7876, 'Adams', 'Clerk', 7788,'12-JAN-83', 1100, NULL, 20);
+ (7900, 'James', 'Clerk', 7698, '03-DEC-81', 950, NULL, 30);
+ (7902, 'Ford', 'Analyst', 7566, '04-DEC-81', 3000, NULL, 20);
+(7934, 'Miller', 'Clerk', 7782, '23-JAN-82', 1300, NULL, 10);
+
+
+
+
+3.
+
+F)
+SQL> SELECT ENAME FROM EMP_33 WHERE ENAME like '_i%';
+
+ENAME
+----------
+King
+Miller
+
+G)
+SQL> SET PAGESIZE 200;
+SQL> SELECT ENAME,JOB FROM EMP_33 WHERE JOB!='Manager';
+
+ENAME      JOB
+---------- ----------
+Smith      Clerk
+Allen      Salesman
+Ward       Salesman
+Jones      Manager
+Martin     Salesman
+Blake      Manager
+Clark      Manager
+King       President
+Turner     Salesman
+Adams      Clerk
+James      Clerk
+Ford       Analyst
+Miller     Clerk
+
+13 rows selected.
+
+
+H)
+ SQL> SELECT EMPNO,ENAME,MAX(SAL) "MAXIMUM",MIN(SAL) "MINIMUM" ,SUM(SAL) "TOTAL",AVG(SAL) "AVERAGE"
+	FROM EMP_33;
+
+SELECT EMPNO,ENAME,MAX(SAL) "MAXIMUM",MIN(SAL) "MINIMUM" ,SUM(SAL) "TOTAL",AVG(SAL) "AVERAGE"
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function
+
+
+I)
+ SELECT JOB,MAX(SAL) "HIGHEST",MIN(SAL) "LOWEST" ,SUM(SAL) "SUM",AVG(SAL) "AVERAGE"
+ FROM EMP_33
+ GROUP BY JOB;
+
+JOB           HIGHEST     LOWEST        SUM    AVERAGE
+---------- ---------- ---------- ---------- ----------
+Manager          2975       2450       8275 2758.33333
+Salesman         1600       1250       5600       1400
+Clerk            1300        800       4150     1037.5
+President        5000       5000       5000       5000
+Analyst          3000       3000       3000       3000
+ 
+
+
+J)  
+SQL> SELECT COUNT(EMPNO) "Number of Managers"
+     FROM EMP_33
+     WHERE JOB like'M%';
+
+Number of Managers
+------------------
+                 3
+
+K)
+
+SQL> SELECT *
+  2  FROM EMP_33
+  3  WHERE HIREDATE>'01-JAN-1980';
+
+     EMPNO ENAME      JOB               MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- ---------- ---------- --------- ---------- ---------- ----------
+      7369 Smith      Clerk            7902 17-DEC-80        800                    20
+      7499 Allen      Salesman         7698 20-FEB-81       1600        300         30
+      7521 Ward       Salesman         7698 22-FEB-81       1250        500         30
+      7566 Jones      Manager          7839 02-APR-81       2975                    20
+      7654 Martin     Salesman         7698 28-SEP-81       1250       1400         30
+      7698 Blake      Manager          7839 01-MAY-81       2850                    30
+      7782 Clark      Manager          7839 09-JUN-81       2450                    10
+      7839 King       President             17-NOV-81       5000                    10
+      7844 Turner     Salesman         7698 08-SEP-81       1500          0         30
+      7876 Adams      Clerk            7788 12-JAN-83       1100                    20
+      7900 James      Clerk            7698 03-DEC-81        950                    30
+      7902 Ford       Analyst          7566 04-DEC-81       3000                    20
+      7934 Miller     Clerk            7782 23-JAN-82       1300                    10
+
+13 rows selected.
+
+L)
+
+SQL> SELECT ENAME,SAL
+    FROM EMP_33
+    WHERE JOB LIKE 'Salesman%'
+    AND SAL=(
+       SELECT MAX(SAL)
+       FROM EMP_33
+       WHERE JOB LIKE 'Salesman%');
+
+ENAME             SAL
+---------- ----------
+Allen            1600
+
+
+M) 
+SELECT ENAME,SAL
+    FROM EMP_33
+    WHERE JOB LIKE 'Clerk%'
+    AND SAL=(
+       SELECT MIN(SAL)
+       FROM EMP_33
+       WHERE JOB LIKE 'Clerk%');
+
+ENAME             SAL
+---------- ----------
+Smith             800
+
+N)
+
+SQL> SELECT DEPTNO
+    FROM EMP_33
+    WHERE ENAME='Ford';
+
+    DEPTNO
+----------
+        20
+
+O)
+
+SQL> SELECT DEPTNO
+    FROM EMP_33
+    WHERE SAL=(SELECT MAX(SAL) FROM EMP_33);
+
+    DEPTNO
+----------
+        10
+
+P)
+
+SQL> SELECT ENAME
+    FROM EMP_33
+    WHERE SAL>(SELECT SAL FROM EMP_33 WHERE ENAME='Turner');
+
+ENAME
+----------
+Allen
+Jones
+Blake
+Clark
+King
+Ford
+
+6 rows selected.
