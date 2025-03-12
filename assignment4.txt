@@ -1,0 +1,274 @@
+CREATE TABLE SAILORS_33 (
+    sid INT PRIMARY KEY, 
+    sname VARCHAR(50), 
+    rating INT, 
+    age INT
+);
+
+CREATE TABLE BOATS_33 (
+    bid INT PRIMARY KEY, 
+    bname VARCHAR(50), 
+    color VARCHAR(20)
+);
+
+CREATE TABLE RESERVES_33 (
+    sid INT, 
+    bid INT, 
+    day_of_week VARCHAR(20),
+    PRIMARY KEY (sid, bid, day_of_week),
+    FOREIGN KEY (sid) REFERENCES SAILORS_33(sid),
+    FOREIGN KEY (bid) REFERENCES BOATS_33(bid)
+);
+
+
+
+ 
+INSERT INTO SAILORS_33  VALUES (1, 'Tarun', 5, 30);
+INSERT INTO SAILORS_33  VALUES (2, 'Ravi', 7, 40);
+INSERT INTO SAILORS_33  VALUES (3, 'Amit', 6, 25);
+INSERT INTO SAILORS_33  VALUES (4, 'Rohan', 8, 60);
+INSERT INTO SAILORS_33  VALUES (5, 'Suresh', 5, 70);
+
+
+INSERT INTO BOATS_33 VALUES (101, 'Titanic', 'Red');
+INSERT INTO BOATS_33 VALUES (102, 'Voyager', 'Blue');
+INSERT INTO BOATS_33 VALUES (103, 'Speedster', 'Green');
+INSERT INTO BOATS_33 VALUES (104, 'Wave Rider', 'Red');
+INSERT INTO BOATS_33 VALUES (105, 'Ocean King', 'Yellow');
+
+
+INSERT INTO RESERVES_33 VALUES (1, 101, 'Monday');
+INSERT INTO RESERVES_33 VALUES (2, 102, 'Tuesday');
+INSERT INTO RESERVES_33 VALUES (3, 103, 'Monday');
+INSERT INTO RESERVES_33 VALUES (4, 104, 'Wednesday');
+INSERT INTO RESERVES_33 VALUES (5, 105, 'Monday');
+
+SQL> select * from sailors_33;
+
+       SID SNAME                                                  RATING        AGE
+---------- -------------------------------------------------- ---------- ----------
+         1 Tarun                                                       5         30
+         2 Ravi                                                        7         40
+         3 Amit                                                        6         25
+         4 Rohan                                                       8         60
+         5 Suresh                                                      5         70
+
+SQL> select * from boats_33;
+
+       BID BNAME                                              COLOR
+---------- -------------------------------------------------- --------------------
+       101 Titanic                                            Red
+       102 Voyager                                            Blue
+       103 Speedster                                          Green
+       104 Wave Rider                                         Red
+       105 Ocean King                                         Yellow
+
+SQL> select * from reserves_33;
+
+       SID        BID DAY_OF_WEEK
+---------- ---------- --------------------
+         1        101 Monday
+         2        102 Tuesday
+         3        103 Monday
+         4        104 Wednesday
+         5        105 Monday
+
+
+
+A. 
+SELECT color
+ FROM ( SELECT *
+        FROM SAILORS_33
+        NATURAL JOIN RESERVES_33
+        NATURAL JOIN BOATS_33)
+WHERE SNAME='TARUN';
+
+COLOR
+--------------------
+Red
+
+
+
+B.
+SELECT SID,SNAME
+ FROM ( SELECT *
+        FROM SAILORS_33
+        NATURAL JOIN RESERVES_33
+       )
+WHERE DAY_OF_WEEK='Monday';
+
+
+       SID SNAME
+---------- --------------------------------------------------
+         1 Tarun
+         3 Amit
+         5 Suresh
+
+C.
+
+SELECT BID,BNAME
+FROM BOATS_33
+WHERE color IN ('Red','Green');
+
+  BID BNAME
+---------- --------------------------------------------------
+       101 Titanic
+       103 Speedster
+       104 Wave Rider
+
+D.
+
+
+SQL> DELETE
+    FROM SAILORS_33
+    WHERE AGE>60;
+
+DELETE
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (CSE1.SYS_C0019373) violated - child record found
+
+
+
+
+
+
+
+
+2)
+
+
+CREATE TABLE TEACHER_33 (
+    Tid INT PRIMARY KEY, 
+    Name VARCHAR(50), 
+    Dept VARCHAR(50)
+);
+
+CREATE TABLE SUBJECT_33 (
+    Subno INT PRIMARY KEY, 
+    Subtitle VARCHAR(50)
+);
+
+CREATE TABLE TAUGHTBY_33 (
+    Tid INT, 
+    Subno INT, 
+    FOREIGN KEY (Tid) REFERENCES TEACHER_33(Tid),
+    FOREIGN KEY (Subno) REFERENCES SUBJECT_33(Subno)
+);
+
+CREATE TABLE STUDENT_33 (
+    Rollno INT PRIMARY KEY, 
+    Sname VARCHAR(50), 
+    City VARCHAR(50)
+);
+
+
+INSERT INTO TEACHER_33 VALUES(1, 'Dr. Sharma', 'Physics');
+INSERT INTO TEACHER_33 VALUES(2, 'Dr. Gupta', 'Chemistry');
+INSERT INTO TEACHER_33 VALUES(3, 'Dr. Rao', 'Mathematics');
+INSERT INTO TEACHER_33 VALUES(4, 'Dr. Singh', 'Physics');
+INSERT INTO TEACHER_33 VALUES(5, 'Dr. Verma', 'Computer Science');
+
+
+
+INSERT INTO SUBJECT_33 VALUES (101, 'Thermodynamics');
+INSERT INTO SUBJECT_33 VALUES (102, 'Quantum Mechanics');
+INSERT INTO SUBJECT_33 VALUES (103, 'Data Structures');
+INSERT INTO SUBJECT_33 VALUES (104, 'Operating Systems');
+INSERT INTO SUBJECT_33 VALUES (105, 'RDBMS');
+
+
+INSERT INTO TAUGHTBY_33 VALUES (1, 101);
+INSERT INTO TAUGHTBY_33 VALUES (4, 101);
+INSERT INTO TAUGHTBY_33 VALUES (2, 102); 
+INSERT INTO TAUGHTBY_33 VALUES (5, 105); 
+INSERT INTO TAUGHTBY_33 VALUES (3, 103); 
+
+
+
+INSERT INTO STUDENT_33 VALUES (201, 'Ankit', 'Kolkata');
+INSERT INTO STUDENT_33 VALUES (202, 'Rahul', 'Delhi');
+INSERT INTO STUDENT_33 VALUES (203, 'Sneha', 'Mumbai');
+INSERT INTO STUDENT_33 VALUES (204, 'Pooja', 'Kolkata');
+INSERT INTO STUDENT_33 VALUES (205, 'Vikram', 'Chennai');
+
+
+
+
+SQL> select * from teacher_33;
+
+       TID NAME                                               DEPT
+---------- -------------------------------------------------- --------------------------------------------------
+         1 Dr. Sharma                                         Physics
+         2 Dr. Gupta                                          Chemistry
+         3 Dr. Rao                                            Mathematics
+         4 Dr. Singh                                          Physics
+         5 Dr. Verma                                          Computer Science
+
+SQL> select * from subject_33;
+
+     SUBNO SUBTITLE
+---------- --------------------------------------------------
+       101 Thermodynamics
+       102 Quantum Mechanics
+       103 Data Structures
+       104 Operating Systems
+       105 RDBMS
+
+SQL> select * from taughtby_33;
+
+       TID      SUBNO
+---------- ----------
+         1        101
+         4        101
+         2        102
+         5        105
+         3        103
+
+SQL> select * from student_33;
+
+    ROLLNO SNAME                                              CITY
+---------- -------------------------------------------------- --------------------------------------------------
+       201 Ankit                                              Kolkata
+       202 Rahul                                              Delhi
+       203 Sneha                                              Mumbai
+       204 Pooja                                              Kolkata
+       205 Vikram                                             Chennai
+
+
+A. 
+SELECT NAME
+FROM ( SELECT *
+	FROM TEACHER_33
+	NATURAL JOIN TAUGHTBY_33
+	NATURAL JOIN SUBJECT_33)
+WHERE DEPT='Physics' and SUBTITLE='Thermodynamics';
+
+
+B.
+UPDATE SUBJECT_33
+SET SUBTITLE='RDBMS'
+WHERE SUBNO=101;
+
+1 row updated.
+
+C.
+
+SELECT *
+FROM STUDENT_33
+WHERE CITY='Kolkata' AND (ROLLNO BETWEEN 203 AND 205);
+
+    ROLLNO SNAME                                              CITY
+---------- -------------------------------------------------- --------------------------------------------------
+       204 Pooja                                              Kolkata
+D.
+
+ SELECT *
+ FROM STUDENT_33
+WHERE CITY='Kolkata' 
+Order by ROLLNO DESC;
+
+    ROLLNO SNAME                                              CITY
+---------- -------------------------------------------------- --------------------------------------------------
+       204 Pooja                                              Kolkata
+       201 Ankit                                              Kolkata
