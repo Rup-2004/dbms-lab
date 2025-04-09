@@ -1,0 +1,224 @@
+1.
+
+SALESPEOPLE8_33
+
+SNUM 	 SNAME                                              	  CITY                                                   COMM
+ ---------- 	-------------------------------------------------- ----------------------------------------------- ------------
+      1001   Ravi                                               	Delhi                                                    1500
+      1002   Anita                                             		Mumbai                                              2000
+      1003   John                                               	Delhi                                                    1800
+      1004   Meera                                              	Chennai                                              1700
+
+CUSTOMER8_33
+
+      CNUM CNAME                                              CITY                                                   RATING       SNUM
+---------- -------------------------------------------------- -------------------------------------------------- ---------- ----------
+       201 Akash                                              Delhi                                                     	    200          1001
+       202 Priya                                              	Mumbai                                                    300           1002
+       203 David                                              Delhi                                                           300           1001
+       204 Simran                                             Chennai                                                     250           1004
+       205 Ali                                                	Mumbai                                                    300           1002
+
+ORDERS8_33
+
+      ONUM        AMT 	ODATE      	CNUM       SNUM
+     ---------- 	----------	 ---------		 ---------- 	----------
+       301       	5000 	10-JAN-24        201      	 1001
+       302       	7000 	12-JAN-24        202      	 1002
+       303       	4000 	15-JAN-24        203      	 1001
+       304       	6500 	01-FEB-24        204      	 1004
+       305       	8000 	20-FEB-24        205      	 1002
+
+
+CREATE TABLE SALESPEOPLE8_33 (
+  SNUM INT PRIMARY KEY,
+  SNAME VARCHAR(50),
+  CITY VARCHAR(50),
+  COMM INT
+);
+
+
+CREATE TABLE CUSTOMER8_33 (
+  CNUM INT PRIMARY KEY,
+  CNAME VARCHAR(50),
+  CITY VARCHAR(50),
+  RATING INT,
+  SNUM INT,
+  FOREIGN KEY (SNUM) REFERENCES SALESPEOPLE8_33(SNUM)
+);
+
+
+
+
+CREATE TABLE ORDERS8_33 (
+  ONUM INT PRIMARY KEY,
+  AMT INT,
+  ODATE DATE,
+  CNUM INT,
+  SNUM INT,
+  FOREIGN KEY (CNUM) REFERENCES CUSTOMER8_33(CNUM),
+  FOREIGN KEY (SNUM) REFERENCES SALESPEOPLE8_33(SNUM)
+);
+
+
+INSERT INTO SALESPEOPLE8_33 VALUES (1001, 'Ravi', 'Delhi', 1500);
+INSERT INTO SALESPEOPLE8_33 VALUES (1002, 'Anita', 'Mumbai', 2000);
+INSERT INTO SALESPEOPLE8_33 VALUES (1003, 'John', 'Delhi', 1800);
+INSERT INTO SALESPEOPLE8_33 VALUES (1004, 'Meera', 'Chennai', 1700);
+
+
+
+INSERT INTO CUSTOMER8_33 VALUES (201, 'Akash', 'Delhi', 200, 1001);
+INSERT INTO CUSTOMER8_33 VALUES (202, 'Priya', 'Mumbai', 300, 1002);
+INSERT INTO CUSTOMER8_33 VALUES (203, 'David', 'Delhi', 300, 1001);
+INSERT INTO CUSTOMER8_33 VALUES (204, 'Simran', 'Chennai', 250, 1004);
+INSERT INTO CUSTOMER8_33 VALUES (205, 'Ali', 'Mumbai', 300, 1002);
+
+
+
+INSERT INTO ORDERS8_33 VALUES (301, 5000, '10-JAN-2024', 201, 1001);
+INSERT INTO ORDERS8_33 VALUES (302, 7000, '12-JAN-2024', 202, 1002);
+INSERT INTO ORDERS8_33 VALUES (303, 4000, '15-JAN-2024', 203, 1001);
+INSERT INTO ORDERS8_33 VALUES (304, 6500, '01-FEB-2024', 204, 1004);
+INSERT INTO ORDERS8_33 VALUES (305, 8000, '20-FEB-2024', 205, 1002);
+
+
+
+2.
+
+a)
+
+CREATE VIEW customer_view1 as
+( SELECT CNUM,CNAME,RATING
+FROM CUSTOMER8_33
+WHERE RATING=(SELECT MAX(RATING) FROM CUSTOMER8_33));
+
+SELECT  * FROM CUSTOMER_VIEW1;
+
+    CNUM 	CNAME                                                  RATING
+---------- 	--------------------------------------------------		 ----------
+       202 		Priya                                                     	  300
+       203 		David                                                       300
+       205 		Ali                                                              300
+
+
+b)
+
+CREATE VIEW salespeople_view1 as
+( SELECT CITY,COUNT(SNUM) NUM_OF_SALESPERSON
+ FROM SALESPEOPLE8_33 
+GROUP BY CITY);
+
+SELECT  * FROM salespeople_VIEW1;
+
+CITY                                               			NUM_OF_SALESPERSON
+-------------------------------------------------- 		------------------
+Delhi                                                              	     2
+Mumbai                                                              1
+Chennai                                                             1
+
+c)
+
+CREATE VIEW salespeople_view2 as
+( SELECT S.SNUM,S.SNAME,AVG(AMT) AVG_ORDERS,COUNT(ONUM) TOTAL_ORDERS
+FROM SALESPEOPLE8_33 S
+JOIN ORDERS8_33 O ON O.SNUM=S.SNUM
+GROUP BY S.SNUM,S.SNAME
+);
+
+
+SELECT  * FROM salespeople_VIEW2;
+
+
+      SNUM SNAME                                              AVG_ORDERS 	TOTAL_ORDERS
+---------- ------------------------------------------- 		---------- 		------------
+      1002 Anita                                                    7500            		2
+      1004 Meera                                                 6500            		1
+      1001 Ravi                                                     4500            		2
+
+
+d)
+
+CREATE VIEW salespeople_view3 as
+( SELECT S.SNUM,C.CNUM
+ FROM SALESPEOPLE8_33 S
+ JOIN CUSTOMER8_33 C ON C.SNUM=S.SNUM);
+
+SELECT  * FROM salespeople_VIEW3;
+
+      SNUM       CNUM
+      ----------   ----------
+      1001        201
+      1002        202
+      1001        203
+      1004        204
+      1002        205
+
+
+3.
+
+CREATE VIEW SALESPEOPLE_CUSTOMER_ORDERS AS
+(SELECT S.SNAME SALESPEOPLENAME,C.CNAME CUSTOMERNAME,O.ONUM ORDERNUMBER
+FROM ORDERS8_33 O
+JOIN CUSTOMER8_33 C ON O.CNUM=C.CNUM
+JOIN SALESPEOPLE8_33 S ON O.SNUM=S.SNUM
+);
+
+
+ SELECT * FROM SALESPEOPLE_CUSTOMER_ORDERS;
+
+SALESPEOPLENAME                                    CUSTOMERNAME                                       ORDERNUMBER
+-------------------------------------------------- -------------------------------------------------- 			-----------
+Ravi                                               			Akash                                                      	301
+Anita                                              			Priya                                                      		302
+Ravi                                               			David                                                      	303
+Meera                                              		Simran                                                     	304
+Anita                                              			Ali                                                        		305
+
+
+
+4.
+
+CREATE VIEW SALESPEOPLE_VIEW4 AS
+SELECT SNUM,COMM
+FROM SALESPEOPLE8_33
+WHERE COMM BETWEEN 1000 AND 2000
+WITH CHECK OPTION;
+
+
+SELECT * FROM SALESPEOPLE_VIEW4;
+
+      SNUM       COMM
+---------- ----------
+      1001       1500
+      1002       2000
+      1003       1800
+      1004       1700
+
+ UPDATE SALESPEOPLE_VIEW4
+ SET COMM=12000
+WHERE SNUM=1001;
+
+OUTPUT:
+
+UPDATE SALESPEOPLE_VIEW4
+       *
+ERROR at line 1:
+ORA-01402: view WITH CHECK OPTION where-clause violation
+
+
+ UPDATE SALESPEOPLE_VIEW4
+ SET COMM=1200
+WHERE SNUM=1001;
+
+1 row updated.
+
+SELECT * FROM SALESPEOPLE_VIEW4;
+
+      SNUM       COMM
+    ----------      ----------
+      1001       1200
+      1002       2000
+      1003       1800
+      1004       1700
+
